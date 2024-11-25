@@ -2,9 +2,9 @@
     <div id="sidebar" class="sidebar sidebar-with-footer">
         <!-- Aplication Brand -->
         <div class="app-brand">
-            <a href="/index.html">
+            <a href="<?=  base_url(route_to('Panel::index'))  ?>">
                 <img src="images/logo.png" alt="Mono">
-                <span class="brand-name">MONO</span>
+                <span class="brand-name">Mi BLOG</span>
             </a>
         </div>
         <!-- begin sidebar scrollbar -->
@@ -15,16 +15,16 @@
 
 
                 <li class="active">
-                    <a class="sidenav-item-link" href="index.html">
+                    <a class="sidenav-item-link" href="<?=  base_url(route_to('Panel::index'))  ?>">
                         <i class="mdi mdi-briefcase-account-outline"></i>
-                        <span class="nav-text">Business Dashboard</span>
+                        <span class="nav-text"> Inicio </span>
                     </a>
                 </li>
 
 
 
                 <li class="section-title">
-                    Apps
+                    Menu
                 </li>
 
 
@@ -32,16 +32,23 @@
 
 
                 <li>
-                    <a class="sidenav-item-link" href="chat.html">
+                    <a class="sidenav-item-link" href="<?=  base_url(route_to('Publicacion::index'))  ?>">
                         <i class="mdi mdi-wechat"></i>
-                        <span class="nav-text">Chat</span>
+                        <span class="nav-text">Publicaciones</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a class="sidenav-item-link" href="<?=  base_url(route_to('Categoria::index'))  ?>">
+                        <i class="mdi mdi-wechat"></i>
+                        <span class="nav-text">Categorias</span>
                     </a>
                 </li>
 
 
 
 
-                <li class="has-sub">
+                <!-- <li class="has-sub">
                     <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#email"
                         aria-expanded="false" aria-controls="email">
                         <i class="mdi mdi-email"></i>
@@ -88,7 +95,7 @@
 
                         </div>
                     </ul>
-                </li>
+                </li> -->
 
 
             </ul>

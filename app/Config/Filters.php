@@ -76,14 +76,15 @@ class Filters extends BaseFilters
             // 'invalidchars',
             'session' => [
                 'except' => [
-                    'login',
-                    'logout',
-                    'register',
                     'sobre-mi',
                     '/',
                     'inicio',
                     'contacto',
                     'posts/*',
+                    'login*', 
+                    'register', 
+                    'auth/a/*', 
+                    'logout'
                 ]
             ]
         ],

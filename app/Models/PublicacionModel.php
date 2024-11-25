@@ -28,7 +28,10 @@ class PublicacionModel extends Model
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = [];
+    protected $validationRules      = [
+        'titulo' => 'required|min_length[5]|max_length[250]',
+        'contenido' => 'required'
+    ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;

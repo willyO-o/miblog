@@ -23,6 +23,9 @@ $routes->group('admin', static function ($routes) {
     $routes->resource('publicacion');
     
     $routes->resource('categoria');
+
+    $routes->get('dashboard', 'Panel::index');
+    
 });
 
 

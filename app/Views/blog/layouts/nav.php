@@ -10,6 +10,13 @@
                 <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="<?= base_url('inicio') ?>">Inicio</a></li>
                 <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="<?= base_url('sobre-mi') ?>">Sobre Mi</a></li>
                 <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="<?= base_url('contacto') ?>">Contacto</a></li>
+                <?php  if(is_numeric(auth()->id())) :?>
+
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="<?= base_url(route_to('Publicacion::index')) ?>">Administración</a></li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="<?= base_url('logout') ?>">Cerrar Sesion</a></li>
+
+                <?php  endif ?>
+
             </ul>
         </div>
     </div>

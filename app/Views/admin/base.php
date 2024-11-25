@@ -74,6 +74,7 @@
   <?= $this->include('admin/layouts/scripts') ?>
 
 
+  <?= $this->renderSection('js') ?>
   <!--  -->
 
 

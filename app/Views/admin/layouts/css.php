@@ -27,3 +27,5 @@
 
 
 <script src="<?= base_url() ?>/admin/plugins/nprogress/nprogress.js"></script>
+
+<link href="<?= base_url() ?>admin/plugins/summernote/summernote-bs5.css" rel="stylesheet" />

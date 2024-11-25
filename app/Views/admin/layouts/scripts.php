@@ -53,3 +53,5 @@
 <script src="<?= base_url() ?>/admin/js/chart.js"></script>
 <script src="<?= base_url() ?>/admin/js/map.js"></script>
 <script src="<?= base_url() ?>/admin/js/custom.js"></script>
+
+<script src="<?= base_url() ?>admin/plugins/summernote/summernote-bs5.js"></script>

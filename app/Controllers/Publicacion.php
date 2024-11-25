@@ -3,9 +3,18 @@
 namespace App\Controllers;
 
 use CodeIgniter\HTTP\ResponseInterface;
+use App\Models\CategoriaModel;
 
 class Publicacion extends BaseController
 {
+
+    protected  CategoriaModel $categoriaModel;
+
+
+    public function __construct() {
+        $this->categoriaModel = new CategoriaModel();
+    }
+
     /**
      * Return an array of resource objects, themselves in array format.
      *
@@ -35,7 +44,11 @@ class Publicacion extends BaseController
      */
     public function new()
     {
-        //
+        $data = [
+            'categorias' =>$this->categoriaModel->where('estado_categoria','ACTIVO')->findAll()
+        ];
+
+        return view('admin/publicacion/nuevo', $data);
     }
 
     /**
@@ -45,7 +58,14 @@ class Publicacion extends BaseController
      */
     public function create()
     {
-        //
+
+        $datos = $this->request->getPost();
+        $titulo = $this->request->getPost('titulo');
+        
+
+
+
+        return var_dump($titulo);
     }
 
     /**
