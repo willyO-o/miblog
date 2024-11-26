@@ -12,7 +12,15 @@ class PublicacionModel extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        'titulo',
+        'contenido',
+        'id_autor',
+        'imagen',
+        'id_categoria',
+        'estado_publicacion',
+        'publicado_el',
+    ];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -21,18 +29,26 @@ class PublicacionModel extends Model
     protected array $castHandlers = [];
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
+    protected $createdField  = 'creado_el';
+    protected $updatedField  = 'modificado_el';
+    protected $deletedField  = '';
 
     // Validation
     protected $validationRules      = [
         'titulo' => 'required|min_length[5]|max_length[250]',
-        'contenido' => 'required'
+        'contenido' => 'required|min_length[5]',
+        // 'imagen'=> 'permit_empty|uploaded[imagen]|max_size[imagen,1024]|is_image[imagen]',
+        'id_categoria' => 'required|field_exists[categoria.id_categoria]',
+        'estado_publicacion' => 'required|in_list[PENDIENTE,PUBLICADO,BORRADOR]',
     ];
-    protected $validationMessages   = [];
+
+    protected $validationMessages   = [
+        'id_categoria' =>[
+            'required' =>'Por favor seleccione una categoria.'
+        ]
+    ];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
 

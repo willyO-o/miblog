@@ -1,5 +1,9 @@
-$(function() {
+$(function () {
     'use strict';
+
+
+
+
 
     $('#contenido').summernote({
         height: 300
@@ -8,7 +12,7 @@ $(function() {
 
 
 
-    $('#formulario-publicacion').submit(function(evento){
+    $('#formulario-publicacion').submit(function (evento) {
         evento.preventDefault();
 
         let action = $(this).attr('action');
@@ -19,7 +23,7 @@ $(function() {
 
         $.ajax(
             {
-                url:action,
+                url: action,
                 type: 'POST',
                 data: datos,
                 contentType: false,
@@ -27,16 +31,38 @@ $(function() {
                 cache: false
 
             }
-        ).done(function(respuesta){
-
+        ).done(function (respuesta) {
+            // 200  201
             console.log(respuesta);
+
+            const mensaje = respuesta.mensaje;
+
             
+            Swal.fire({
+                icon: "success",
+                title: "Registro Exitoso",
+                text: mensaje,
+            });
+
+            window.location.href = window.location.origin + '/admin/publicacion'
+
 
         })
-        .fail(function(respuesta){
-            alert('Error al guardar la publicación');
+            .fail(function (respuesta) {
+                // 400 500
+                console.log(respuesta);
 
-        })
+                const mensaje = respuesta.responseJSON.mensaje;
+
+                Swal.fire({
+                    icon: "error",
+                    title: mensaje,
+                    text: "Something went wrong!",
+                });
+
+
+
+            })
 
     });
 

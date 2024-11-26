@@ -54,4 +54,8 @@
 <script src="<?= base_url() ?>/admin/js/map.js"></script>
 <script src="<?= base_url() ?>/admin/js/custom.js"></script>
 
+
+<script src="<?= base_url("admin/plugins/sweetalert/sweetalert2.js") ?>"></script>
+
+
 <script src="<?= base_url() ?>admin/plugins/summernote/summernote-bs5.js"></script>

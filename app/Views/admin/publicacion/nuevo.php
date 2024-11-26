@@ -51,7 +51,7 @@
 
                     <div class="form-group">
                         <label for="imagen">Imagen Portada</label>
-                        <input type="file" class="form-control-file" id="imagen" name="imagen" accept="imagen/jpg, image/png,imagen/jpeg">
+                        <input type="file" class="form-control-file" id="imagen" name="imagen" accept="image/jpg, image/png,image/jpeg">
                     </div>
                     <div class="form-footer mt-6">
                         <button type="submit"   class="btn btn-primary btn-pill">Guardar</button>

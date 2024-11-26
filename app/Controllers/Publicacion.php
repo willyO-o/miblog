@@ -4,15 +4,18 @@ namespace App\Controllers;
 
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\CategoriaModel;
+use App\Models\PublicacionModel;
+use CodeIgniter\HTTP\RequestInterface;
 
 class Publicacion extends BaseController
 {
 
     protected  CategoriaModel $categoriaModel;
-
+    protected PublicacionModel $publicacionModel;
 
     public function __construct() {
         $this->categoriaModel = new CategoriaModel();
+        $this->publicacionModel = new PublicacionModel();
     }
 
     /**
@@ -59,13 +62,67 @@ class Publicacion extends BaseController
     public function create()
     {
 
+
+        $reglasValidacion= $this->publicacionModel->getValidationRules();
+        $mensajesValidacion = $this->publicacionModel->getValidationMessages();
+
+        $resultadoValidacion =  $this->validate($reglasValidacion, $mensajesValidacion);
+
+        if($resultadoValidacion == false){
+
+            $respuesta = [
+                'mensaje' => "Campos Incorrectos",
+                'errores' => $this->validator->getErrors()
+            ];
+
+            return $this->response->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)->setJSON($respuesta);
+            
+        }
+
+
         $datos = $this->request->getPost();
-        $titulo = $this->request->getPost('titulo');
+
+        $imagen =  $this->request->getFile('imagen');
         
+        // $datos['imagen'] = $imagen->getRandomName();
+
+        $datos['imagen'] = $imagen->getName();
+
+        $directorioDestino = ROOTPATH.'public/subidas/imagenes';
 
 
+        if(is_dir($directorioDestino) == false){
+            mkdir($directorioDestino, 0777 , true);
+        }
 
-        return var_dump($titulo);
+        $imagen->move($directorioDestino,$datos['imagen']);
+
+        //agregar id del autor o usuario
+        $datos['id_autor'] = auth()->id();
+
+        if($datos['estado_publicacion'] == 'PUBLICADO'){
+            $datos['publicado_el'] = date('Y-m-d H:i:s', now());
+        }
+
+
+        $idPublicacion = $this->publicacionModel->insert($datos);
+
+        if(is_numeric($idPublicacion) == false){
+            $respuesta = [
+                'mensaje' => "Error al Registrar la Publicación, Verifique e intente nuevamente.",
+            ];
+
+            return $this->response->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)->setJSON($respuesta);
+        }
+
+
+        $respuesta = [
+            'mensaje' => "Publicación Registrada Correctamente.",
+            'id_publicacion' => $idPublicacion
+        ];
+
+        return $this->response->setStatusCode(ResponseInterface::HTTP_CREATED)->setJSON($respuesta);
+        
     }
 
     /**

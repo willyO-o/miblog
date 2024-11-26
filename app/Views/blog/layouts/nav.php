@@ -10,12 +10,15 @@
                 <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="<?= base_url('inicio') ?>">Inicio</a></li>
                 <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="<?= base_url('sobre-mi') ?>">Sobre Mi</a></li>
                 <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="<?= base_url('contacto') ?>">Contacto</a></li>
-                <?php  if(is_numeric(auth()->id())) :?>
+                <?php if (auth()->loggedIn()) : ?>
 
-                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="<?= base_url(route_to('Publicacion::index')) ?>">Administración</a></li>
-                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="<?= base_url('logout') ?>">Cerrar Sesion</a></li>
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="<?= base_url(route_to('Publicacion::index')) ?>">Administración</a></li>
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="<?= base_url('logout') ?>">Cerrar Sesion</a></li>
+                <?php else: ?>
 
-                <?php  endif ?>
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="<?= base_url('login') ?>">Login</a></li>
+
+                <?php endif ?>
 
             </ul>
         </div>
