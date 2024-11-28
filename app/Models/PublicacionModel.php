@@ -39,7 +39,7 @@ class PublicacionModel extends Model
     protected $validationRules      = [
         'titulo' => 'required|min_length[5]|max_length[250]',
         'contenido' => 'required|min_length[5]',
-        // 'imagen'=> 'permit_empty|uploaded[imagen]|max_size[imagen,1024]|is_image[imagen]',
+        'imagen'=> 'uploaded[imagen]|max_size[imagen,1024]|is_image[imagen]',
         'id_categoria' => 'required|field_exists[categoria.id_categoria]',
         'estado_publicacion' => 'required|in_list[PENDIENTE,PUBLICADO,BORRADOR]',
     ];
@@ -49,7 +49,7 @@ class PublicacionModel extends Model
             'required' =>'Por favor seleccione una categoria.'
         ]
     ];
-    protected $skipValidation       = false;
+    protected $skipValidation       = true;
     protected $cleanValidationRules = true;
 
     // Callbacks
@@ -62,4 +62,17 @@ class PublicacionModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+
+
+
+    public function listarPublicaciones()
+    {
+        $this->select("publicacion.*, username, categoria")
+            ->join('usuario u', 'u.id = publicacion.id_autor')
+            ->join('categoria c', 'c.id_categoria = publicacion.id_categoria')
+            ->orderBy('publicacion.creado_el', 'DESC');
+
+        return $this->findAll();
+    }
 }

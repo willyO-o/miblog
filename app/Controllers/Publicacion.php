@@ -13,7 +13,8 @@ class Publicacion extends BaseController
     protected  CategoriaModel $categoriaModel;
     protected PublicacionModel $publicacionModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->categoriaModel = new CategoriaModel();
         $this->publicacionModel = new PublicacionModel();
     }
@@ -25,6 +26,17 @@ class Publicacion extends BaseController
      */
     public function index()
     {
+
+        if ($this->request->isAJAX()) {
+
+            $listadoPublicaciones = $this->publicacionModel->listarPublicaciones();
+
+
+            return $this->response->setJSON($listadoPublicaciones);
+        }
+
+
+
         return view('admin/publicacion/index');
     }
 
@@ -48,7 +60,7 @@ class Publicacion extends BaseController
     public function new()
     {
         $data = [
-            'categorias' =>$this->categoriaModel->where('estado_categoria','ACTIVO')->findAll()
+            'categorias' => $this->categoriaModel->where('estado_categoria', 'ACTIVO')->findAll()
         ];
 
         return view('admin/publicacion/nuevo', $data);
@@ -63,12 +75,12 @@ class Publicacion extends BaseController
     {
 
 
-        $reglasValidacion= $this->publicacionModel->getValidationRules();
+        $reglasValidacion = $this->publicacionModel->getValidationRules();
         $mensajesValidacion = $this->publicacionModel->getValidationMessages();
 
         $resultadoValidacion =  $this->validate($reglasValidacion, $mensajesValidacion);
 
-        if($resultadoValidacion == false){
+        if ($resultadoValidacion == false) {
 
             $respuesta = [
                 'mensaje' => "Campos Incorrectos",
@@ -76,38 +88,36 @@ class Publicacion extends BaseController
             ];
 
             return $this->response->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)->setJSON($respuesta);
-            
         }
 
 
         $datos = $this->request->getPost();
 
         $imagen =  $this->request->getFile('imagen');
-        
-        // $datos['imagen'] = $imagen->getRandomName();
 
-        $datos['imagen'] = $imagen->getName();
-
-        $directorioDestino = ROOTPATH.'public/subidas/imagenes';
+        $datos['imagen'] = $imagen->getRandomName();
 
 
-        if(is_dir($directorioDestino) == false){
-            mkdir($directorioDestino, 0777 , true);
+        $directorioDestino = ROOTPATH . 'public/subidas/imagenes';
+
+
+        if (is_dir($directorioDestino) == false) {
+            mkdir($directorioDestino, 0777, true);
         }
 
-        $imagen->move($directorioDestino,$datos['imagen']);
+        $imagen->move($directorioDestino, $datos['imagen']);
 
         //agregar id del autor o usuario
         $datos['id_autor'] = auth()->id();
 
-        if($datos['estado_publicacion'] == 'PUBLICADO'){
+        if ($datos['estado_publicacion'] == 'PUBLICADO') {
             $datos['publicado_el'] = date('Y-m-d H:i:s', now());
         }
 
 
         $idPublicacion = $this->publicacionModel->insert($datos);
 
-        if(is_numeric($idPublicacion) == false){
+        if (is_numeric($idPublicacion) == false) {
             $respuesta = [
                 'mensaje' => "Error al Registrar la Publicación, Verifique e intente nuevamente.",
             ];
@@ -122,7 +132,6 @@ class Publicacion extends BaseController
         ];
 
         return $this->response->setStatusCode(ResponseInterface::HTTP_CREATED)->setJSON($respuesta);
-        
     }
 
     /**
@@ -134,7 +143,23 @@ class Publicacion extends BaseController
      */
     public function edit($id = null)
     {
-        //
+        $publicacion = $this->publicacionModel->find($id);
+
+        // dd($publicacion);
+
+        if (empty($publicacion)) {
+
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Registro no Enctrado");
+        }
+
+
+        $data = [
+            'categorias' => $this->categoriaModel->where('estado_categoria', 'ACTIVO')->findAll(),
+            'publicacion' => $publicacion
+        ];
+
+        return view('admin/publicacion/editar',$data);
+
     }
 
     /**
@@ -146,7 +171,7 @@ class Publicacion extends BaseController
      */
     public function update($id = null)
     {
-        //
+        echo "update: ".$id;
     }
 
     /**
@@ -158,6 +183,23 @@ class Publicacion extends BaseController
      */
     public function delete($id = null)
     {
-        //
+        $publicacion = $this->publicacionModel->find($id);
+
+        if (empty($publicacion)) {
+            $respuesta = [
+                'mensaje' => "Publicación no encontrada."
+            ];
+
+            return $this->response->setStatusCode(ResponseInterface::HTTP_NOT_FOUND)->setJSON($respuesta);
+        }
+
+
+        $this->publicacionModel->delete($id);
+
+        $respuesta = [
+            'mensaje' => $publicacion->titulo . " Eliminado Correctamente."
+        ];
+
+        return $this->response->setJSON($respuesta);
     }
 }
