@@ -12,7 +12,11 @@ class CategoriaModel extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        'categoria',
+        'descripcion_categoria',
+        'estado_categoria',
+    ];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -21,15 +25,23 @@ class CategoriaModel extends Model
     protected array $castHandlers = [];
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
+    protected $createdField  = 'creado_el';
+    protected $updatedField  = 'modificado_el';
+    protected $deletedField  = '';
 
     // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
+    protected $validationRules      = [
+        'categoria' => 'required|min_length[5]|max_length[150]',
+        'descripcion_categoria' => 'permit_empty|max_length[2000]',
+        'estado_categoria' => 'required|in_list[ACTIVO,INACTIVO]',
+    ];
+    protected $validationMessages   = [
+        'estado_categoria' =>[
+            'in_list' => 'El estado de la categoria debe ser ACTIVO o INACTIVO'
+        ]
+    ];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
 

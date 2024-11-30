@@ -158,8 +158,7 @@ class Publicacion extends BaseController
             'publicacion' => $publicacion
         ];
 
-        return view('admin/publicacion/editar',$data);
-
+        return view('admin/publicacion/editar', $data);
     }
 
     /**
@@ -171,7 +170,79 @@ class Publicacion extends BaseController
      */
     public function update($id = null)
     {
-        echo "update: ".$id;
+
+        $publicacion =  $this->publicacionModel->find($id);
+
+        if (empty($publicacion)) {
+            $respuesta = [
+                'mensaje' => "Publicación no encontrada."
+            ];
+
+            return $this->response->setStatusCode(ResponseInterface::HTTP_NOT_FOUND)
+                ->setJSON($respuesta);
+        }
+
+
+        $reglasValidacion = $this->publicacionModel->getValidationRules();
+
+        unset($reglasValidacion['imagen']);
+
+        $mensajesValidacion = $this->publicacionModel->getValidationMessages();
+
+
+        $resultadoValidacion =  $this->validate($reglasValidacion, $mensajesValidacion);
+
+        if ($resultadoValidacion == false) {
+
+            $respuesta = [
+                'mensaje' => "Campos Incorrectos",
+                'errores' => $this->validator->getErrors()
+            ];
+
+            return $this->response->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)->setJSON($respuesta);
+        }
+
+        $imagen = $this->request->getFile('imagen');
+
+        $datos = $this->request->getPost();
+
+
+        if ($imagen->getError() == 0) {
+
+            $datos['imagen'] = $imagen->getRandomName();
+
+            $directorioDestino = ROOTPATH . 'public/subidas/imagenes';
+            if (is_dir($directorioDestino) == false) {
+                mkdir($directorioDestino, 0777, true);
+            }
+
+            $imagen->move($directorioDestino, $datos['imagen']);
+        }
+
+
+        $datos['id_autor'] = auth()->id();
+
+        if ($datos['estado_publicacion'] == 'PUBLICADO') {
+            $datos['publicado_el'] = date('Y-m-d H:i:s', now());
+        }
+
+        $resultado = $this->publicacionModel->update($id, $datos);
+
+        if ($resultado == false) {
+
+            $respuesta = [
+                'mensaje' => "Ocurrio un error al actualizar el registro, verifique e intente nuevamente."
+            ];
+
+            return $this->response->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
+                ->setJSON($respuesta);
+        }
+
+
+        return $this->response->setJSON(array(
+            'mensaje' => "Publicación Actualizada Correctamente."
+        ));
+
     }
 
     /**

@@ -64,7 +64,7 @@
                     <div class="">
                     <label for="">Imagen Actual</label>
 
-                                <img src="<?= base_url("subidas/imagenes/".$publicacion->imagen) ?>" alt="">
+                        <img class="w-25" src="<?= base_url("subidas/imagenes/".$publicacion->imagen) ?>" alt="">
                     </div>
 
                     <div class="form-footer mt-6">
